@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TrueGauge — HMI demo (before / after)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EDEFF2;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 24px;
+  }
+  .stage { width: 980px; }
+  .topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .status-label { font-size: 13px; font-weight: 600; color: #185FA5; }
+  .count-label { font-size: 12px; color: #5F5E5A; }
+  .progress-track { width: 100%; height: 4px; background: #D3D1C7; border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #378ADD; width: 0%; }
+
+  .hmi { background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 20px; padding: 22px; }
+
+  .profile-bar { display: flex; align-items: center; gap: 14px; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid #C9DDF3; }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; background: #185FA5; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .profile-name { font-size: 17px; font-weight: 700; color: #042C53; margin: 0; }
+  .profile-role { font-size: 13px; color: #5F5E5A; margin: 2px 0 0; }
+
+  .remark-header { font-size: 13px; font-weight: 700; color: #185FA5; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 14px; }
+
+  .aspect-frame { width: 100%; aspect-ratio: 21 / 9; background: #FFFFFF; border-radius: 16px; border: 1px solid #B5D4F4; position: relative; overflow: hidden; }
+  .frame { position: absolute; inset: 0; display: flex; align-items: center; opacity: 0; transition: opacity 0.5s ease; padding: 0 40px; }
+  .frame.active { opacity: 1; }
+
+  .zone-left { width: 22%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-right: 1px solid #E5E3D8; padding-right: 24px; }
+  .zone-center { flex: 1; padding: 0 32px; }
+  .zone-right { width: 26%; padding-left: 24px; border-left: 1px solid #E5E3D8; }
+
+  .icon-circle { width: 66px; height: 66px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid; }
+  .badge-pill { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 8px; }
+
+  .score-label { font-size: 13px; color: #5F5E5A; margin: 0 0 4px; }
+  .score-value { font-size: 48px; font-weight: 700; margin: 0; line-height: 1; }
+  .row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: #5F5E5A; }
+  .row span:last-child { color: #042C53; font-weight: 600; }
+
+  .remark-box { background: #E6F1FB; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #042C53; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="topline">
+    <span class="status-label" id="status-label">Before — no fuel intelligence</span>
+    <span class="count-label" id="count-label">1 / 2</span>
+  </div>
+
+  <div class="hmi">
+    <div class="profile-bar">
+      <div class="avatar">RJ</div>
+      <div>
+        <p class="profile-name">Rohit Joshi</p>
+        <p class="profile-role">Product Owner — Visualization-HMI Platform, VW Group Vehicles</p>
+      </div>
+    </div>
+
+    <div class="remark-header">Fuel detection remark</div>
+
+    <div class="aspect-frame">
+
+      <div class="frame active" id="frame-before">
+        <div class="zone-left">
+          <div class="icon-circle" style="border-color:#B4B2A9; background:#F1EFE8;">
+            <svg width="28" height="28" viewBox="0 0 26 26">
+              <rect x="4" y="7" width="12" height="15" rx="1.5" stroke="#5F5E5A" stroke-width="2" fill="none"/>
+              <path d="M16 11 L21 8 L21 17" stroke="#5F5E5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <span style="font-size:14px; font-weight:700; color:#2C2C2A;">Petrol</span>
+          <span class="badge-pill" style="background:#F1EFE8; color:#2C2C2A;">No data</span>
+        </div>
+        <div class="zone-center">
+          <p class="score-label">Fuel quality index</p>
+          <p class="score-value" style="color:#8A8A85;">—</p>
+          <div class="row"><span>Water signature</span><span style="color:#8A8A85;">Unknown</span></div>
+          <div class="row"><span>Reading state</span><span style="color:#8A8A85;">Not sensed</span></div>
+        </div>
+        <div class="zone-right">
+          <p style="font-size:13px; color:#5F5E5A; margin:0 0 6px;">Status</p>
+          <p style="font-size:15px; font-weight:700; color:#2C2C2A; margin:0 0 10px;">No visibility</p>
+          <div class="remark-box">Pump shows price and quantity only. The vehicle has no read on what actually went in.</div>
+        </div>
+      </div>
+
+      <div class="frame" id="frame-after">
+        <div class="zone-left">
+          <div class="icon-circle" style="border-color:#3B6D11; background:#EAF3DE;">
+            <svg width="28" height="28" viewBox="0 0 26 26">
+              <rect x="4" y="7" width="12" height="15" rx="1.5" stroke="#27500A" stroke-width="2.4" fill="none"/>
+              <path d="M16 11 L21 8 L21 17" stroke="#27500A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <line x1="4" y1="12" x2="16" y2="12" stroke="#27500A" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <span style="font-size:14px; font-weight:700; color:#042C53;">Petrol</span>
+          <span class="badge-pill" style="background:#EAF3DE; color:#27500A;">Good</span>
+        </div>
+        <div class="zone-center">
+          <p class="score-label">Fuel quality index</p>
+          <p class="score-value" style="color:#27500A;">92</p>
+          <div class="row"><span>Water signature</span><span>Not detected</span></div>
+          <div class="row"><span>Reading state</span><span>Confirmed</span></div>
+        </div>
+        <div class="zone-right">
+          <p style="font-size:13px; color:#5F5E5A; margin:0 0 6px;">Status</p>
+          <p style="font-size:15px; font-weight:700; color:#27500A; margin:0 0 10px;">Confirmed good</p>
+          <div class="remark-box">Fuel meets BIS standard. No action needed. Logged to your 30-day trend.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<script>
+var states = [
+  { id: 'frame-before', label: 'Before — no fuel intelligence' },
+  { id: 'frame-after', label: 'After — TrueGauge confirmed reading' }
+];
+var idx = 0;
+var DURATION = 3000;
+var startTime = Date.now();
+
+function render(i){
+  states.forEach(function(s, si){
+    document.getElementById(s.id).classList.toggle('active', si === i);
+  });
+  document.getElementById('status-label').textContent = states[i].label;
+  document.getElementById('count-label').textContent = (i + 1) + ' / ' + states.length;
+}
+
+function advance(){
+  idx = (idx + 1) % states.length;
+  render(idx);
+  startTime = Date.now();
+}
+
+function progressTick(){
+  var elapsed = Date.now() - startTime;
+  var pct = Math.min(100, (elapsed / DURATION) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  if (elapsed >= DURATION) advance();
+}
+
+render(0);
+setInterval(progressTick, 50);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TrueGauge — full combined recording (phone + 32 cases)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; transition: background 0.3s; }
+  body.theme-light { background: #F4F7FB; }
+  body.theme-dark { background: #0B0D0F; }
+  body.theme-phone { background: #EDEFF2; }
+  .wrap { width: 760px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .phase-label { font-size: 13px; font-weight: 600; }
+  .theme-light .phase-label, .theme-phone .phase-label { color: #185FA5; }
+  .theme-dark .phase-label { color: #B4B2A9; }
+  .count-label { font-size: 12px; }
+  .theme-light .count-label, .theme-phone .count-label { color: #5F5E5A; }
+  .theme-dark .count-label { color: #8B8F96; }
+  .progress-track { width: 100%; height: 4px; border-radius: 2px; margin-top: 14px; overflow: hidden; }
+  .theme-light .progress-track, .theme-phone .progress-track { background: #D3D1C7; }
+  .theme-dark .progress-track { background: #2A2D31; }
+  .progress-fill { height: 100%; background: #378ADD; width: 0%; }
+
+  .light-screen { display: none; background: #E6F1FB; border-radius: 20px; border: 1px solid #B5D4F4; padding: 16px; opacity: 1; transition: opacity 0.18s ease, transform 0.18s ease; }
+  .dark-screen { display: none; transition: opacity 0.18s ease, transform 0.18s ease; }
+  .phone-screen { display: none; transition: opacity 0.18s ease, transform 0.18s ease; }
+  .fade-out { opacity: 0 !important; transform: scale(0.98); }
+  .radar-pulse circle:last-child { animation: pulseDot 0.6s ease-out; }
+  @keyframes pulseDot { 0% { r: 5; opacity: 0.4; } 100% { r: 5; opacity: 1; } }
+
+  .light-grid { display: grid; grid-template-columns: 1fr 2.2fr; gap: 12px; }
+  .light-cluster { background: #FFFFFF; border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px solid #B5D4F4; }
+  .light-icon-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid; }
+  .light-info { background: #FFFFFF; border-radius: 16px; padding: 16px; border: 1px solid #B5D4F4; min-height: 190px; }
+  .light-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; color: #5F5E5A; }
+  .light-row span:last-child { color: #042C53; }
+
+  .dark-screen-inner { background: #15171A; border-radius: 16px; padding: 16px; border: 1px solid #2A2D31; }
+  .dark-grid { display: grid; grid-template-columns: 1fr 2.1fr; gap: 14px; }
+  .dark-panel { background: #1D2024; border-radius: 10px; padding: 12px; }
+  .dark-radar-area { position: relative; background: #0B0D0F; border-radius: 12px; min-height: 240px; overflow: hidden; }
+  .dark-badge { position: absolute; background: #1D2024; border-radius: 10px; padding: 6px 12px; text-align: center; top: 10px; left: 10px; }
+  .dark-status-bar { margin-top: 14px; border-radius: 10px; padding: 12px; text-align: center; }
+
+  .phone-outer { display: flex; justify-content: center; }
+  .phone-bezel { width: 300px; border: 6px solid #C7C5BA; border-radius: 32px; padding: 10px 8px; background: #F1EFE8; }
+  .phone-statusbar { display: flex; justify-content: space-between; align-items: center; padding: 2px 8px 8px; }
+  .phone-viewport { width: 100%; height: 460px; overflow: hidden; border-radius: 20px; background: #FFFFFF; position: relative; }
+  .phone-page { position: absolute; inset: 0; padding: 16px; overflow-y: auto; opacity: 0; transition: opacity 0.25s ease; }
+  .phone-page.active { opacity: 1; }
+  .phone-metric { background: #F1EFE8; border-radius: 8px; padding: 12px; }
+  .phone-card { background: #F1EFE8; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .phone-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 2px; border-bottom: 0.5px solid #E5E3D8; }
+</style>
+</head>
+<body class="theme-phone" id="body">
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="phase-label" id="phase-label">Part 1 of 3: phone app · fuel report</span>
+    <span class="count-label" id="count-label">1 / 35</span>
+  </div>
+
+  <div class="phone-screen active" id="phone-screen">
+    <div class="phone-outer">
+      <div class="phone-bezel">
+        <div class="phone-statusbar">
+          <span style="font-size:12px; font-weight:600; color:#042C53;">09:41</span>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#3B6D11; display:inline-block;"></span>
+            <span style="font-size:10px; color:#5F5E5A;">Live</span>
+          </div>
+        </div>
+        <div class="phone-viewport">
+
+          <div class="phone-page active" id="pp-0">
+            <p style="font-size:12px; color:#5F5E5A; margin:0 0 2px;">Advanced fuel report</p>
+            <p style="font-size:19px; font-weight:700; margin:0 0 1rem; color:#042C53;">Last 30 days</p>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:1rem;">
+              <div class="phone-metric"><p style="font-size:12px; color:#5F5E5A; margin:0 0 4px;">Average FQI</p><p style="font-size:22px; font-weight:700; margin:0; color:#042C53;">84</p></div>
+              <div class="phone-metric"><p style="font-size:12px; color:#5F5E5A; margin:0 0 4px;">Flagged</p><p style="font-size:22px; font-weight:700; margin:0; color:#042C53;">2</p></div>
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:6px; height:70px; margin-bottom:6px;">
+              <div style="flex:1; height:58px; background:#639922; border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1; height:62px; background:#639922; border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1; height:55px; background:#639922; border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1; height:60px; background:#639922; border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1; height:40px; background:#EF9F27; border-radius:3px 3px 0 0;"></div>
+            </div>
+            <p style="font-size:12px; color:#5F5E5A; margin:0;">5-fill trend, most recent on the right</p>
+          </div>
+
+          <div class="phone-page" id="pp-1">
+            <p style="font-size:15px; font-weight:700; margin:0 0 0.75rem; color:#042C53;">Mitigation plan</p>
+            <div class="phone-card">
+              <div style="display:flex; justify-content:space-between; gap:6px;">
+                <p style="font-size:13px; font-weight:700; margin:0; color:#042C53;">Get injector checked</p>
+                <span style="font-size:10px; padding:2px 7px; border-radius:6px; background:#FAEEDA; color:#854F0B; white-space:nowrap;">12 days</span>
+              </div>
+              <p style="font-size:12px; color:#5F5E5A; margin:4px 0 0;">Two caution reads in last 5 fills</p>
+            </div>
+            <div class="phone-card">
+              <div style="display:flex; justify-content:space-between; gap:6px;">
+                <p style="font-size:13px; font-weight:700; margin:0; color:#042C53;">Review Ring Road evidence</p>
+                <span style="font-size:10px; padding:2px 7px; border-radius:6px; background:#FCEBEB; color:#A32D2D; white-space:nowrap;">3 days</span>
+              </div>
+              <p style="font-size:12px; color:#5F5E5A; margin:4px 0 0;">Confirmed poor, evidence saved</p>
+            </div>
+            <div class="phone-card">
+              <div style="display:flex; justify-content:space-between; gap:6px;">
+                <p style="font-size:13px; font-weight:700; margin:0; color:#042C53;">Confirm trend stable</p>
+                <span style="font-size:10px; padding:2px 7px; border-radius:6px; background:#FFFFFF; color:#5F5E5A; white-space:nowrap;">30 days</span>
+              </div>
+              <p style="font-size:12px; color:#5F5E5A; margin:4px 0 0;">Re-check after next 3 fills</p>
+            </div>
+          </div>
+
+          <div class="phone-page" id="pp-2">
+            <p style="font-size:15px; font-weight:700; margin:0 0 2px; color:#042C53;">Your stations</p>
+            <p style="font-size:12px; color:#5F5E5A; margin:0 0 0.6rem;">Ignore to leave a station off your list</p>
+            <div class="phone-row"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:12px; padding:2px 7px; border-radius:6px; background:#EAF3DE; color:#27500A; font-weight:700;">93</span><span style="font-size:13px; color:#042C53;">Highway 9 Fuels</span></div><span style="font-size:11px; color:#5F5E5A;">Ignore</span></div>
+            <div class="phone-row"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:12px; padding:2px 7px; border-radius:6px; background:#EAF3DE; color:#27500A; font-weight:700;">88</span><span style="font-size:13px; color:#042C53;">Green Mile Petrol</span></div><span style="font-size:11px; color:#5F5E5A;">Ignore</span></div>
+            <div class="phone-row"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:12px; padding:2px 7px; border-radius:6px; background:#FCEBEB; color:#791F1F; font-weight:700;">28</span><span style="font-size:13px; text-decoration:line-through; color:#8A8A85;">Ring Road Fuels</span></div><span style="font-size:11px; color:#5F5E5A;">Restore</span></div>
+            <div class="phone-row"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:12px; padding:2px 7px; border-radius:6px; background:#FAEEDA; color:#633806; font-weight:700;">61</span><span style="font-size:13px; color:#042C53;">Sunrise Station</span></div><span style="font-size:11px; color:#5F5E5A;">Ignore</span></div>
+            <div class="phone-row"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:12px; padding:2px 7px; border-radius:6px; background:#EAF3DE; color:#27500A; font-weight:700;">90</span><span style="font-size:13px; color:#042C53;">Market Street Fuels</span></div><span style="font-size:11px; color:#5F5E5A;">Ignore</span></div>
+            <p style="font-size:12px; color:#8A8A85; margin-top:10px;">Ring Road Fuels ignored — moved off your list</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="light-screen" id="light-screen">
+    <div class="light-cat" id="light-cat">Petrol audit</div>
+    <div class="light-grid">
+      <div class="light-cluster">
+        <div class="light-icon-circle" id="light-icon-circle"><svg id="light-icon" width="22" height="22" viewBox="0 0 26 26"></svg></div>
+        <div style="font-size:11px; font-weight:600; color:#042C53;" id="light-cluster-label">Petrol</div>
+        <div style="font-size:10px; padding:2px 7px; border-radius:6px;" id="light-cluster-badge">Good</div>
+      </div>
+      <div class="light-info">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:12px; color:#185FA5;" id="light-sub">Fuel quality index</span>
+          <span style="font-size:30px; font-weight:700;" id="light-score">92</span>
+        </div>
+        <div id="light-rows"></div>
+        <div style="display:flex; align-items:center; gap:6px; background:#E6F1FB; border-radius:8px; padding:6px 10px; margin:8px 0;">
+          <span style="font-size:12px; color:#042C53;" id="light-rec">No action needed.</span>
+        </div>
+        <div style="font-size:11px; color:#5F5E5A;" id="light-report-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dark-screen" id="dark-screen">
+    <div class="dark-screen-inner">
+    <div class="dark-grid">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="dark-panel">
+          <div style="font-size:11px; color:#8B8F96; text-transform:uppercase; margin-bottom:8px;">System</div>
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#D7D9DC; margin-bottom:6px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#5DCAA5; display:inline-block;" id="dark-sys-dot"></span>
+            <span id="dark-sys-text">Track initialized</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#D7D9DC;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#5DCAA5; display:inline-block;"></span>
+            <span>Region calibrated</span>
+          </div>
+        </div>
+        <div class="dark-panel" style="flex:1;">
+          <div style="font-size:11px; color:#8B8F96; text-transform:uppercase; margin-bottom:8px;">Type</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div id="dark-icon-box" style="width:28px; height:28px;"></div>
+            <span style="font-size:15px; color:#F2F2F0; font-weight:600;" id="dark-type-name">Petrol</span>
+          </div>
+        </div>
+        <div class="dark-panel">
+          <div style="font-size:11px; color:#8B8F96; text-transform:uppercase;">Recommendation</div>
+          <div style="font-size:12px; color:#D7D9DC; margin-top:6px;" id="dark-rec-text">No action needed.</div>
+        </div>
+      </div>
+      <div class="dark-radar-area">
+        <svg id="radar" viewBox="0 0 300 240" style="width:100%; height:240px; display:block;"></svg>
+        <div id="dark-overlay" style="position:absolute; inset:0; display:none; align-items:center; justify-content:center;"></div>
+        <div class="dark-badge" id="dark-fqi-box">
+          <div style="font-size:9px; color:#8B8F96;">Score</div>
+          <div style="font-size:20px; font-weight:700;" id="dark-fqi-val">92</div>
+        </div>
+      </div>
+    </div>
+    <div class="dark-status-bar" id="dark-status-bar">
+      <span style="font-size:14px; font-weight:700; letter-spacing:0.05em;" id="dark-status-text">CONFIRMED · GOOD</span>
+    </div>
+    </div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<script>
+var TONE_HEX = {
+  good:    { light_fg:'#27500A', light_bg:'#EAF3DE', main:'#5DCAA5', bar:'#173404', text:'#C0DD97' },
+  caution: { light_fg:'#633806', light_bg:'#FAEEDA', main:'#EF9F27', bar:'#412402', text:'#FAC775' },
+  poor:    { light_fg:'#791F1F', light_bg:'#FCEBEB', main:'#E24B4A', bar:'#501313', text:'#F09595' },
+  neutral: { light_fg:'#2C2C2A', light_bg:'#F1EFE8', main:'#8B8F96', bar:'#2C2C2A', text:'#B4B2A9' }
+};
+
+function svgIconMarkup(kind, color){
+  var s = '';
+  if (kind === 'fuel'){
+    s += '<rect x="4" y="7" width="12" height="15" rx="1.5" stroke="'+color+'" stroke-width="2" fill="none"/>';
+    s += '<path d="M16 11 L21 8 L21 17" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+    s += '<line x1="4" y1="12" x2="16" y2="12" stroke="'+color+'" stroke-width="1.6"/>';
+  } else if (kind === 'ev'){
+    s += '<rect x="6" y="7" width="14" height="15" rx="2" stroke="'+color+'" stroke-width="2" fill="none"/>';
+    s += '<line x1="10" y1="7" x2="10" y2="3" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/>';
+    s += '<line x1="16" y1="7" x2="16" y2="3" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/>';
+  } else if (kind === 'gauge'){
+    s += '<path d="M4 18 A9 9 0 1 1 22 18" stroke="'+color+'" stroke-width="2" fill="none"/>';
+    s += '<line x1="13" y1="18" x2="18" y2="11" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/>';
+  } else if (kind === 'chart'){
+    var xs=[4,9,14,19], hs=[8,14,10,17];
+    for (var i=0;i<4;i++){ s += '<rect x="'+xs[i]+'" y="'+(22-hs[i])+'" width="4" height="'+hs[i]+'" rx="1" fill="'+color+'"/>'; }
+  } else if (kind === 'receipt'){
+    s += '<rect x="5" y="3" width="16" height="20" rx="2" stroke="'+color+'" stroke-width="2" fill="none"/>';
+    s += '<line x1="8" y1="9" x2="18" y2="9" stroke="'+color+'" stroke-width="1.6"/>';
+    s += '<line x1="8" y1="13" x2="18" y2="13" stroke="'+color+'" stroke-width="1.6"/>';
+    s += '<line x1="8" y1="17" x2="14" y2="17" stroke="'+color+'" stroke-width="1.6"/>';
+  } else if (kind === 'shield'){
+    s += '<path d="M13 3 L21 6 V12 C21 18 17.5 21.5 13 23 C8.5 21.5 5 18 5 12 V6 Z" stroke="'+color+'" stroke-width="2" stroke-linejoin="round" fill="none"/>';
+    s += '<path d="M9 12.5 L12 15.5 L18 9" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+  }
+  return s;
+}
+
+function aud(icon,name,tier,score,rows,rec,reportStatus,ratio,disableReport){
+  return { kind:'audit', icon:icon, name:name, tier:tier, score:score, rows:rows, rec:rec, reportStatus:reportStatus||'', ratio:ratio, disableReport:!!disableReport };
+}
+
+var cases = [
+  aud('fuel','Petrol','good',92,[['Water signature','Not detected'],['Octane grade','Track 2 only']],'Fuel meets BIS standard.','',[0.9,0.1,0]),
+  aud('fuel','Petrol','caution',65,[['Water signature','Slightly elevated'],['Reading state','Provisional']],'Keep driving. Confirming.','1 of 3 confirms needed',[0.4,0.5,0.1]),
+  aud('fuel','Petrol','poor',28,[['Water signature','Significantly elevated'],['Reading state','Confirmed']],'Evidence ready.','Evidence ready',[0.1,0.3,0.6]),
+  aud('fuel','Diesel','good',90,[['Water signature','Not detected'],['Reading state','Confirmed']],'Fuel meets SABS standard.','',[0.9,0.1,0]),
+  aud('fuel','Diesel','caution',58,[['Water signature','Elevated (moderate)'],['Reading state','Provisional']],'Keep driving before deciding.','2 of 3 confirms needed',[0.35,0.5,0.15]),
+  aud('fuel','Diesel','poor',22,[['Water signature','High (confirmed)'],['Reading state','Confirmed']],'Engine may run rough.','Evidence ready',[0.05,0.25,0.7]),
+  aud('fuel','Ethanol E20','good',96,[['Water signature','Not detected'],['Reading state','Confirmed']],'Fuel meets EU 98/70/EC.','',[0.95,0.05,0]),
+  aud('fuel','Ethanol E20','caution',70,[['Blend ratio','Slightly off'],['Reading state','Provisional']],'Keep driving. Confirming.','1 of 3 confirms needed',[0.45,0.45,0.1]),
+  aud('fuel','Ethanol E20','poor',35,[['Water signature','Contamination confirmed'],['Reading state','Confirmed']],'Consider a different station.','Evidence ready',[0.1,0.3,0.6]),
+  aud('gauge','CNG / LPG','neutral',null,[['Coverage','Future extension'],['Reading','Unavailable']],'No reading available.','',[0,0,0],true),
+  aud('ev','EV charging','good',95,[['Energy match','Billed equals delivered'],['Session','Clean']],'No action needed.','',[0.92,0.08,0]),
+  aud('ev','EV charging','caution',65,[['Energy variance','Small (0.4 kWh)'],['Session','Minor mismatch']],'Small variance. Worth a check.','1 of 3 confirms needed',[0.4,0.5,0.1]),
+  aud('ev','EV charging','poor',41,[['Energy + fees','$8.40 + $1.20 + $4.50'],['Idle fee in','04:12']],'Review session before disputing.','Evidence ready',[0.15,0.3,0.55]),
+  { kind:'trend', icon:'chart', name:'Fuel trend', tier:'caution', rec:'Sudden quality drop detected.' },
+  { kind:'billing', icon:'receipt', name:'EV billing', tier:'poor', rec:'Peak-hour surcharge flagged.' },
+  { kind:'trust', icon:'shield', name:'Station trust', tier:'caution', rec:'2 recent flags. Verification pending.' }
+];
+
+var PHONE_PAGES = 3;
+var TOTAL = PHONE_PAGES + cases.length * 2;
+var slide = 0;
+var svg = document.getElementById('radar');
+var svgns = "http://www.w3.org/2000/svg";
+var cx = 150, cy = 120;
+
+function clearSvg(){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+function drawRadar(ratio){
+  clearSvg();
+  svg.classList.remove('radar-pulse');
+  void svg.offsetWidth;
+  svg.classList.add('radar-pulse');
+  [45,80,115].forEach(function(r){
+    var c = document.createElementNS(svgns,'circle');
+    c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',r);
+    c.setAttribute('fill','none'); c.setAttribute('stroke','#2A2D31'); c.setAttribute('stroke-width','1');
+    svg.appendChild(c);
+  });
+  var colors = [TONE_HEX.good.main, TONE_HEX.caution.main, TONE_HEX.poor.main];
+  for (var i=0;i<30;i++){
+    var angle = Math.random()*Math.PI*2;
+    var dist = 16+Math.random()*105;
+    var x = cx+Math.cos(angle)*dist;
+    var y = cy+Math.sin(angle)*dist*0.78;
+    var r = Math.random();
+    var col = r < ratio[0] ? colors[0] : (r < ratio[0]+ratio[1] ? colors[1] : colors[2]);
+    var p = document.createElementNS(svgns,'circle');
+    p.setAttribute('cx',x); p.setAttribute('cy',y); p.setAttribute('r',2.4);
+    p.setAttribute('fill',col);
+    svg.appendChild(p);
+  }
+  var center = document.createElementNS(svgns,'circle');
+  center.setAttribute('cx',cx); center.setAttribute('cy',cy); center.setAttribute('r',5);
+  center.setAttribute('fill','#378ADD');
+  svg.appendChild(center);
+}
+
+function renderLight(c){
+  var t = TONE_HEX[c.tier];
+  document.getElementById('light-cat').textContent = c.name + ' \u2014 ' + c.tier;
+  document.getElementById('light-icon-circle').style.borderColor = t.main;
+  document.getElementById('light-icon-circle').style.background = t.light_bg;
+  document.getElementById('light-icon').innerHTML = svgIconMarkup(c.icon, t.light_fg);
+  document.getElementById('light-cluster-label').textContent = c.name;
+  var cb = document.getElementById('light-cluster-badge');
+  cb.textContent = c.tier === 'neutral' ? 'N/A' : (c.tier.charAt(0).toUpperCase()+c.tier.slice(1));
+  cb.style.background = t.light_bg; cb.style.color = t.light_fg;
+  document.getElementById('light-score').textContent = c.score === null ? '\u2014' : c.score;
+  document.getElementById('light-score').style.color = t.light_fg;
+  var rowsEl = document.getElementById('light-rows');
+  rowsEl.innerHTML = '';
+  (c.rows||[]).forEach(function(r){
+    var d = document.createElement('div');
+    d.className = 'light-row';
+    d.innerHTML = '<span>'+r[0]+'</span><span>'+r[1]+'</span>';
+    rowsEl.appendChild(d);
+  });
+  document.getElementById('light-rec').textContent = c.rec;
+  document.getElementById('light-report-status').textContent = c.reportStatus || '';
+}
+
+function renderDark(c){
+  var t = TONE_HEX[c.tier];
+  document.getElementById('dark-icon-box').innerHTML = '<svg width="28" height="28" viewBox="0 0 26 26">'+svgIconMarkup(c.icon, t.main)+'</svg>';
+  document.getElementById('dark-type-name').textContent = c.name;
+  document.getElementById('dark-rec-text').textContent = c.rec;
+  document.getElementById('dark-sys-text').textContent = (c.kind === 'audit' && c.disableReport) ? 'Track not available' : 'Track initialized';
+  document.getElementById('dark-sys-dot').style.background = (c.kind === 'audit' && c.disableReport) ? '#5F5E5A' : '#5DCAA5';
+
+  var overlay = document.getElementById('dark-overlay');
+  var fqiBox = document.getElementById('dark-fqi-box');
+  if (c.kind === 'audit' && !c.disableReport){
+    svg.style.display = 'block'; overlay.style.display = 'none'; fqiBox.style.display = 'block';
+    drawRadar(c.ratio);
+    document.getElementById('dark-fqi-val').textContent = c.score;
+    document.getElementById('dark-fqi-val').style.color = t.main;
+  } else if (c.disableReport){
+    svg.style.display = 'none'; fqiBox.style.display = 'none'; overlay.style.display = 'flex';
+    overlay.innerHTML = '<div style="text-align:center;"><svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="9" stroke="#5F5E5A" stroke-width="2" fill="none"/><line x1="7" y1="19" x2="19" y2="7" stroke="#5F5E5A" stroke-width="2"/></svg><div style="font-size:12px; color:#8B8F96; margin-top:8px;">Not supported</div></div>';
+  } else {
+    svg.style.display = 'none'; fqiBox.style.display = 'none'; overlay.style.display = 'flex';
+    if (c.kind === 'trend'){
+      var vals=[92,94,91,93,75];
+      var bars = vals.map(function(v,vi){ var col = vi===4?TONE_HEX.caution.main:TONE_HEX.good.main; return '<div style="width:20px; height:'+Math.round(v*0.75)+'px; background:'+col+'; border-radius:3px 3px 0 0;"></div>'; }).join('');
+      overlay.innerHTML = '<div style="display:flex; align-items:flex-end; gap:8px;">'+bars+'</div>';
+    } else if (c.kind === 'billing'){
+      overlay.innerHTML = '<div style="font-size:13px; color:#D7D9DC; text-align:left; line-height:1.9;"><div>Energy &nbsp;&nbsp;&nbsp;&nbsp;$8.40</div><div style="color:'+TONE_HEX.poor.main+';">Surcharge &nbsp;$4.50</div><div style="margin-top:6px; font-weight:700; color:#F2F2F0;">Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$14.10</div></div>';
+    } else if (c.kind === 'trust'){
+      overlay.innerHTML = '<div style="text-align:center;"><div style="font-size:26px; font-weight:700; color:'+TONE_HEX.caution.main+';">2 of 3</div><div style="width:140px; height:8px; background:#2A2D31; border-radius:4px; margin-top:8px;"><div style="width:66%; height:100%; background:'+TONE_HEX.caution.main+'; border-radius:4px;"></div></div></div>';
+    }
+  }
+
+  var bar = document.getElementById('dark-status-bar');
+  var stext = document.getElementById('dark-status-text');
+  bar.style.background = t.bar; stext.style.color = t.text;
+  if (c.disableReport){ stext.textContent = 'NOT SUPPORTED'; }
+  else if (c.kind === 'audit'){ stext.textContent = 'CONFIRMED \u00b7 ' + c.tier.toUpperCase(); }
+  else { stext.textContent = c.name.toUpperCase(); }
+}
+
+function phaseOf(s){
+  if (s < PHONE_PAGES) return 'phone';
+  if (s < PHONE_PAGES + cases.length) return 'light';
+  return 'dark';
+}
+
+function render(s){
+  var body = document.getElementById('body');
+  var phoneScreen = document.getElementById('phone-screen');
+  var lightScreen = document.getElementById('light-screen');
+  var darkScreen = document.getElementById('dark-screen');
+  var phase = phaseOf(s);
+
+  phoneScreen.style.display = 'none';
+  lightScreen.style.display = 'none';
+  darkScreen.style.display = 'none';
+
+  if (phase === 'phone'){
+    body.className = 'theme-phone';
+    phoneScreen.style.display = 'block';
+    var pageIdx = s;
+    var labels = ['fuel report', 'mitigation plan', 'your stations'];
+    document.querySelectorAll('.phone-page').forEach(function(p, pi){
+      p.classList.toggle('active', pi === pageIdx);
+    });
+    document.getElementById('phase-label').textContent = 'Part 1 of 3: phone app \u00b7 ' + labels[pageIdx];
+  } else if (phase === 'light'){
+    body.className = 'theme-light';
+    lightScreen.style.display = 'block';
+    var i = s - PHONE_PAGES;
+    var c = cases[i];
+    renderLight(c);
+    document.getElementById('phase-label').textContent = 'Part 2 of 3: app dashboard \u00b7 ' + c.name + (c.tier ? ' \u00b7 ' + c.tier : '');
+  } else {
+    body.className = 'theme-dark';
+    darkScreen.style.display = 'block';
+    var i2 = s - PHONE_PAGES - cases.length;
+    var c2 = cases[i2];
+    renderDark(c2);
+    document.getElementById('phase-label').textContent = 'Part 3 of 3: console view \u00b7 ' + c2.name + (c2.tier ? ' \u00b7 ' + c2.tier : '');
+  }
+
+  document.getElementById('count-label').textContent = (s+1) + ' / ' + TOTAL;
+}
+
+var DURATION = 1400;
+var startTime = Date.now();
+
+function activeScreenEl(s){
+  var phase = phaseOf(s);
+  if (phase === 'phone') return document.getElementById('phone-screen');
+  if (phase === 'light') return document.getElementById('light-screen');
+  return document.getElementById('dark-screen');
+}
+
+function advance(){
+  var outgoing = activeScreenEl(slide);
+  outgoing.classList.add('fade-out');
+  setTimeout(function(){
+    slide = (slide + 1) % TOTAL;
+    render(slide);
+    var incoming = activeScreenEl(slide);
+    incoming.classList.add('fade-out');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ incoming.classList.remove('fade-out'); });
+    });
+    startTime = Date.now();
+  }, 130);
+}
+
+function progressTick(){
+  var elapsed = Date.now() - startTime;
+  var pct = Math.min(100, (elapsed / DURATION) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  if (elapsed >= DURATION) advance();
+}
+
+render(0);
+setInterval(progressTick, 50);
+</script>
+
+</body>
+</html>

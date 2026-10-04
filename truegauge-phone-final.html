@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TrueGauge — phone app demo (7 pages)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EDEFF2;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 24px;
+  }
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+  .phone-bezel { width: 340px; border: 8px solid #2C2C2A; border-radius: 40px; padding: 12px 10px; background: #1A1A18; box-shadow: 0 20px 50px rgba(0,0,0,0.25); }
+  .statusbar { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px 10px; }
+  .clock { font-size: 14px; font-weight: 700; color: #FFFFFF; }
+  .live { display: flex; align-items: center; gap: 5px; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #3B6D11; }
+  .live-label { font-size: 11px; color: #C8C6BC; }
+  .viewport { width: 100%; height: 620px; overflow: hidden; border-radius: 28px; background: #FFFFFF; position: relative; }
+  .page { position: absolute; inset: 0; padding: 20px; overflow-y: auto; opacity: 0; transition: opacity 0.35s ease; }
+  .page.active { opacity: 1; z-index: 1; }
+  .dots { display: flex; justify-content: center; gap: 6px; padding-top: 12px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #57564F; }
+  .dot.active { background: #378ADD; width: 18px; border-radius: 4px; }
+  .page-caption { font-size: 13px; color: #5F5E5A; text-align: center; margin-top: 10px; }
+
+  .metric-card { background: #F1EFE8; border-radius: 10px; padding: 12px; }
+  .card { background: #F1EFE8; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 9px 2px; border-bottom: 0.5px solid #E5E3D8; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="phone-bezel">
+    <div class="statusbar">
+      <span class="clock" id="clock">09:41</span>
+      <div class="live"><span class="live-dot" id="live-dot"></span><span class="live-label">Live</span></div>
+    </div>
+
+    <div class="viewport">
+
+      <div class="page active" id="pg-0">
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:1.4rem;">
+          <div style="width:54px; height:54px; border-radius:50%; background:#E6F1FB; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:#185FA5;">RJ</div>
+          <p style="font-size:17px; font-weight:700; color:#042C53;">Rohit Joshi</p>
+        </div>
+        <div style="border-top:0.5px solid #E5E3D8; padding-top:14px;">
+          <div class="row"><span style="color:#5F5E5A; font-size:13px;">Vehicle</span><span style="font-size:13px; color:#042C53; font-weight:600;">Petrol sedan</span></div>
+          <div class="row"><span style="color:#5F5E5A; font-size:13px;">Fills tracked</span><span style="font-size:13px; color:#042C53; font-weight:600;">18</span></div>
+          <div class="row" style="border-bottom:none;"><span style="color:#5F5E5A; font-size:13px;">Region standard</span><span style="font-size:13px; color:#042C53; font-weight:600;">BIS (India)</span></div>
+        </div>
+      </div>
+
+      <div class="page" id="pg-1">
+        <p style="font-size:14px; color:#5F5E5A; margin-bottom:12px;">Fuel detection remark</p>
+        <div id="remark-list"></div>
+      </div>
+
+      <div class="page" id="pg-2">
+        <p style="font-size:14px; color:#5F5E5A; margin-bottom:12px;">Electric vehicle charging</p>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <div style="width:50px; height:50px; border-radius:50%; background:#FCEBEB; border:2px solid #E24B4A; display:flex; align-items:center; justify-content:center;">
+            <svg width="24" height="24" viewBox="0 0 26 26"><rect x="6" y="7" width="14" height="15" rx="2" stroke="#791F1F" stroke-width="2" fill="none"/><line x1="10" y1="7" x2="10" y2="3" stroke="#791F1F" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="7" x2="16" y2="3" stroke="#791F1F" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-size:15px; font-weight:700; color:#042C53;">Session at Ring Road</p>
+            <span class="badge" style="background:#FCEBEB; color:#791F1F;">Billing mismatch</span>
+          </div>
+        </div>
+        <p style="font-size:30px; font-weight:700; color:#791F1F; margin:0 0 4px;">41</p>
+        <p style="font-size:13px; color:#5F5E5A; margin-bottom:12px;">Charging integrity index</p>
+        <div class="metric-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0;"><span style="color:#5F5E5A;">Energy (24.0 kWh)</span><span style="color:#042C53;">$8.40</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0;"><span style="color:#5F5E5A;">Network fee</span><span style="color:#042C53;">$1.20</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0; color:#791F1F; font-weight:700;"><span>Peak-hour surcharge</span><span>$4.50</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; padding:6px 0 0; border-top:0.5px solid #E5E3D8; margin-top:4px; font-weight:700; color:#042C53;"><span>Total</span><span>$14.10</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; background:#FAEEDA; border-radius:10px; padding:8px 12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#854F0B" stroke-width="2" fill="none"/><path d="M12 7 V12 L15 15" stroke="#854F0B" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          <span style="font-size:13px; color:#854F0B;">Idle fee in <strong id="idle-timer">04:12</strong></span>
+        </div>
+      </div>
+
+      <div class="page" id="pg-3">
+        <p style="font-size:13px; color:#5F5E5A; margin:0 0 2px;">Advanced fuel report</p>
+        <p style="font-size:21px; font-weight:700; color:#042C53; margin:0 0 14px;">Last 30 days</p>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:12px;">
+          <div class="metric-card"><p style="font-size:13px; color:#5F5E5A; margin-bottom:4px;">Average FQI</p><p style="font-size:24px; font-weight:700; color:#042C53;">84</p></div>
+          <div class="metric-card"><p style="font-size:13px; color:#5F5E5A; margin-bottom:4px;">Flagged</p><p style="font-size:24px; font-weight:700; color:#042C53;">2</p></div>
+        </div>
+        <div style="background:#FCEBEB; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+          <div style="display:flex; align-items:flex-start; gap:8px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" style="margin-top:2px;"><path d="M12 3 L22 20 H2 Z" stroke="#791F1F" stroke-width="2" fill="none" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="14" stroke="#791F1F" stroke-width="2"/><circle cx="12" cy="17" r="1" fill="#791F1F"/></svg>
+            <div>
+              <p style="font-size:13px; font-weight:700; color:#791F1F;">1 poor reading detected</p>
+              <p style="font-size:12px; color:#791F1F;">Ring Road Fuels, confirmed, 4 days ago</p>
+            </div>
+          </div>
+          <button style="font-size:12px; padding:5px 12px; margin-top:8px; border-radius:8px; border:1px solid #E5A5A5; background:#FFFFFF; color:#791F1F; cursor:default;">More info ↗</button>
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:8px; height:66px; margin-bottom:8px;">
+          <div style="flex:1; height:55px; background:#639922; border-radius:3px 3px 0 0;"></div>
+          <div style="flex:1; height:59px; background:#639922; border-radius:3px 3px 0 0;"></div>
+          <div style="flex:1; height:53px; background:#639922; border-radius:3px 3px 0 0;"></div>
+          <div style="flex:1; height:57px; background:#639922; border-radius:3px 3px 0 0;"></div>
+          <div style="flex:1; height:22px; background:#E24B4A; border-radius:3px 3px 0 0;"></div>
+        </div>
+        <p style="font-size:12px; color:#5F5E5A;">5-fill trend, most recent on the right</p>
+      </div>
+
+      <div class="page" id="pg-4">
+        <p style="font-size:16px; font-weight:700; color:#042C53; margin-bottom:14px;">Mitigation plan</p>
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; gap:8px;">
+            <p style="font-size:14px; font-weight:700; color:#042C53;">Get injector checked</p>
+            <span class="badge" style="background:#FAEEDA; color:#854F0B; white-space:nowrap;">12 days</span>
+          </div>
+          <p style="font-size:12px; color:#5F5E5A; margin-top:4px;">Two caution reads in last 5 fills</p>
+        </div>
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; gap:8px;">
+            <p style="font-size:14px; font-weight:700; color:#042C53;">Review Ring Road evidence</p>
+            <span class="badge" style="background:#FCEBEB; color:#791F1F; white-space:nowrap;">3 days</span>
+          </div>
+          <p style="font-size:12px; color:#5F5E5A; margin-top:4px;">Confirmed poor, evidence saved</p>
+        </div>
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; gap:8px;">
+            <p style="font-size:14px; font-weight:700; color:#042C53;">Review EV billing dispute</p>
+            <span class="badge" style="background:#FCEBEB; color:#791F1F; white-space:nowrap;">2 days</span>
+          </div>
+          <p style="font-size:12px; color:#5F5E5A; margin-top:4px;">Peak-hour surcharge flagged</p>
+        </div>
+        <div class="card" style="margin-bottom:0;">
+          <div style="display:flex; justify-content:space-between; gap:8px;">
+            <p style="font-size:14px; font-weight:700; color:#042C53;">Confirm trend stable</p>
+            <span class="badge" style="background:#FFFFFF; color:#5F5E5A; white-space:nowrap;">30 days</span>
+          </div>
+          <p style="font-size:12px; color:#5F5E5A; margin-top:4px;">Re-check after next 3 fills</p>
+        </div>
+      </div>
+
+      <div class="page" id="pg-5">
+        <p style="font-size:16px; font-weight:700; color:#042C53; margin-bottom:2px;">Your stations</p>
+        <p style="font-size:12px; color:#5F5E5A; margin-bottom:12px;">Ignore to leave a station off your list</p>
+        <div id="station-list"></div>
+        <p id="ignored-heading" style="font-size:13px; font-weight:700; color:#5F5E5A; margin:14px 0 6px; display:none;">Ignored</p>
+        <div id="ignored-list"></div>
+      </div>
+
+      <div class="page" id="pg-6">
+        <p style="font-size:16px; font-weight:700; color:#042C53; margin-bottom:2px;">Latest news</p>
+        <p style="font-size:12px; color:#5F5E5A; margin-bottom:12px;">Fuel adulteration: reports and rebuttals</p>
+
+        <div class="card">
+          <p style="font-size:10px; color:#185FA5; font-weight:700; margin-bottom:4px;">INDIA &middot; 13 JUL 2026</p>
+          <p style="font-size:13px; font-weight:700; color:#042C53; margin-bottom:4px;">Lucknow police bust fuel adulteration racket</p>
+          <p style="font-size:12px; color:#5F5E5A;">Four arrested; over 16,000 litres of petrol, diesel and solvent seized. Source: ChiniMandi</p>
+        </div>
+        <div class="card">
+          <p style="font-size:10px; color:#185FA5; font-weight:700; margin-bottom:4px;">INDIA &middot; 4 AUG 2026</p>
+          <p style="font-size:13px; font-weight:700; color:#042C53; margin-bottom:4px;">Oil ministry disputes adulteration claims</p>
+          <p style="font-size:12px; color:#5F5E5A;">Says over 2,000 samples were tested and only 2 cases detected. Source: The Times of India</p>
+        </div>
+        <div class="card">
+          <p style="font-size:10px; color:#185FA5; font-weight:700; margin-bottom:4px;">INDIA &middot; 10 JUL 2026</p>
+          <p style="font-size:13px; font-weight:700; color:#042C53; margin-bottom:4px;">Centre asks states to act amid E20 concerns</p>
+          <p style="font-size:12px; color:#5F5E5A;">Petroleum ministry stresses testing to counter consumer anxieties. Source: Autocar Professional</p>
+        </div>
+        <div class="card" style="margin-bottom:0;">
+          <p style="font-size:10px; color:#185FA5; font-weight:700; margin-bottom:4px;">KENYA &middot; 31 MAR 2026</p>
+          <p style="font-size:13px; font-weight:700; color:#042C53; margin-bottom:4px;">EPRA fines petrol stations, closes others</p>
+          <p style="font-size:12px; color:#5F5E5A;">Latest regulator crackdown. Source: Kenyans.co.ke</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dots" id="dots"></div>
+  </div>
+  <p class="page-caption" id="page-caption">Profile</p>
+</div>
+
+<script>
+var PAGE_NAMES = ['Profile', 'Fuel detection remark', 'Electric vehicle charging', 'Advanced fuel report', 'Mitigation plan', 'Your stations', 'Latest news'];
+var N = PAGE_NAMES.length;
+
+var dotsEl = document.getElementById('dots');
+for (var i = 0; i < N; i++){
+  var d = document.createElement('div');
+  d.className = 'dot';
+  dotsEl.appendChild(d);
+}
+
+var fuels = [
+  { name: 'Petrol', tier: 'good', score: 92, remark: 'Meets BIS standard', icon: 'fuel' },
+  { name: 'Diesel', tier: 'caution', score: 58, remark: 'Confirming, keep driving', icon: 'fuel' },
+  { name: 'Ethanol E20', tier: 'good', score: 96, remark: 'Meets EU 98/70/EC', icon: 'fuel' },
+  { name: 'EV charging', tier: 'poor', score: 41, remark: 'Billing mismatch, review advised', icon: 'plug' }
+];
+var TONE = {
+  good:    { bg: '#EAF3DE', fg: '#27500A' },
+  caution: { bg: '#FAEEDA', fg: '#854F0B' },
+  poor:    { bg: '#FCEBEB', fg: '#791F1F' }
+};
+function fuelIcon(kind, color){
+  if (kind === 'plug'){
+    return '<svg width="18" height="18" viewBox="0 0 26 26"><rect x="6" y="7" width="14" height="15" rx="2" stroke="'+color+'" stroke-width="2" fill="none"/><line x1="10" y1="7" x2="10" y2="3" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="7" x2="16" y2="3" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+  return '<svg width="18" height="18" viewBox="0 0 26 26"><rect x="4" y="7" width="12" height="15" rx="1.5" stroke="'+color+'" stroke-width="2" fill="none"/><path d="M16 11 L21 8 L21 17" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="4" y1="12" x2="16" y2="12" stroke="'+color+'" stroke-width="1.6"/></svg>';
+}
+var remarkList = document.getElementById('remark-list');
+fuels.forEach(function(f){
+  var c = TONE[f.tier];
+  var row = document.createElement('div');
+  row.className = 'row';
+  row.style.borderBottom = '0.5px solid #E5E3D8';
+  row.innerHTML =
+    '<div style="display:flex; align-items:center; gap:10px;">' +
+      '<div style="width:42px; height:42px; border-radius:50%; background:'+c.bg+'; display:flex; align-items:center; justify-content:center;">' + fuelIcon(f.icon, c.fg) + '</div>' +
+      '<div><p style="font-size:14px; font-weight:700; color:#042C53;">'+f.name+'</p><p style="font-size:12px; color:#5F5E5A;">'+f.remark+'</p></div>' +
+    '</div>' +
+    '<span style="font-size:16px; font-weight:700; color:'+c.fg+';">'+f.score+'</span>';
+  remarkList.appendChild(row);
+});
+
+var idleSeconds = 252;
+function renderIdle(){
+  idleSeconds = Math.max(0, idleSeconds - 1);
+  var el = document.getElementById('idle-timer');
+  if (el) el.textContent = String(Math.floor(idleSeconds/60)).padStart(2,'0') + ':' + String(idleSeconds%60).padStart(2,'0');
+}
+setInterval(renderIdle, 1000);
+
+var stations = [
+  { name: 'Highway 9 Fuels', fqi: 93, tier: 'good' },
+  { name: 'Green Mile Petrol', fqi: 88, tier: 'good' },
+  { name: 'Ring Road Fuels', fqi: 28, tier: 'poor' },
+  { name: 'Sunrise Station', fqi: 61, tier: 'caution' },
+  { name: 'Market Street Fuels', fqi: 90, tier: 'good' }
+];
+function stationRow(s, ignored){
+  var c = TONE[s.tier];
+  var div = document.createElement('div');
+  div.className = 'row';
+  div.style.borderBottom = '0.5px solid #E5E3D8';
+  div.innerHTML =
+    '<div style="display:flex; align-items:center; gap:10px;">' +
+      '<span style="font-size:13px; padding:3px 9px; border-radius:6px; background:'+c.bg+'; color:'+c.fg+'; font-weight:700; min-width:28px; text-align:center;">'+s.fqi+'</span>' +
+      '<span style="font-size:14px;'+(ignored ? ' color:#8A8A85; text-decoration:line-through;' : ' color:#042C53;')+'">'+s.name+'</span>' +
+    '</div>';
+  var btn = document.createElement('button');
+  btn.style.cssText = 'font-size:12px; padding:5px 11px; border-radius:8px; border:1px solid #D3D1C7; background:#FFFFFF; cursor:pointer;';
+  btn.textContent = ignored ? 'Restore' : 'Ignore';
+  btn.addEventListener('click', function(){ s.ignored = !ignored; renderStations(); });
+  div.appendChild(btn);
+  return div;
+}
+function renderStations(){
+  var listEl = document.getElementById('station-list');
+  var ignoredEl = document.getElementById('ignored-list');
+  var heading = document.getElementById('ignored-heading');
+  listEl.innerHTML = ''; ignoredEl.innerHTML = '';
+  var any = false;
+  stations.forEach(function(s){
+    if (s.ignored){ any = true; ignoredEl.appendChild(stationRow(s, true)); }
+    else { listEl.appendChild(stationRow(s, false)); }
+  });
+  heading.style.display = any ? 'block' : 'none';
+}
+renderStations();
+
+var idx = 0;
+function goTo(i){
+  idx = i;
+  for (var p = 0; p < N; p++){
+    document.getElementById('pg-' + p).classList.toggle('active', p === idx);
+  }
+  document.querySelectorAll('.dot').forEach(function(d, di){ d.classList.toggle('active', di === idx); });
+  document.getElementById('page-caption').textContent = PAGE_NAMES[idx];
+}
+goTo(0);
+setInterval(function(){ goTo((idx + 1) % N); }, 3800);
+
+function tick(){
+  var n = new Date();
+  document.getElementById('clock').textContent = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+tick();
+setInterval(tick, 1000 * 30);
+setInterval(function(){
+  var dot = document.getElementById('live-dot');
+  dot.style.opacity = dot.style.opacity === '0.3' ? '1' : '0.3';
+}, 700);
+</script>
+
+</body>
+</html>
