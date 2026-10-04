@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotlib
+pandas
+scikit-learn
+cairosvg
+pdf2image

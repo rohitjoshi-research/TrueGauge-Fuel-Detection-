@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "TrueGauge: A Retrofit-Viable, Sensorless-First Vehicle Energy Integrity Indicator for Fuel Adulteration and EV Charging Integrity"
+authors:
+  - family-names: Joshi
+    given-names: Rohit
+    orcid: "https://orcid.org/0009-0007-4201-7862"
+doi: 10.5281/zenodo.22674618
+repository-code: "https://github.com/rohitjoshi-research/TrueGauge-Fuel-Detection-"
+keywords:
+  - fuel adulteration
+  - on-board diagnostics
+  - EV charging integrity
+  - energy integrity index
+  - vehicle HMI
