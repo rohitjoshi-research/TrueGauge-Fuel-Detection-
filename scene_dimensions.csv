@@ -1,0 +1,14 @@
+dimension,n_levels,levels
+Jurisdiction and standard,9,India (BIS); South Africa (SABS); Kenya (EPRA); Brazil (ANP); EU (EN 228/590); Mexico; Nigeria (NMDPRA); Indonesia; East Asia (CN/VN)
+Season,4,Hot dry; Monsoon/rainy; Winter; Dusty dry (harmattan)
+Time of day,3,Day; Evening peak; Night
+Ambient temperature,3,Cold (<10^circC); Mild (10--25^circC); Warm/hot (geq25^circC)
+Humidity and precipitation,3,Dry/dusty; Humid; Rain at refuel
+Altitude,3,"<500m; 500--1,500m; >1,500m"
+Fuel type,4,Petrol (E0--E10); Ethanol-rich (E20+/hydrous); Diesel; Diesel--biodiesel blend
+Adulterant class,6,None; Kerosene; Paraffin; Methanol/ketone; Used cooking oil; Water
+Concentration,6,0%; 2.5%; 5%; 10%; 20%; 30% (hydrocarbons; water leq5%)
+Station supply state,3,Fresh delivery; Aged stock; Sediment-prone tank bottom
+Vehicle/powertrain,4,Port-injection petrol; Direct-injection/turbo petrol; Common-rail diesel; Flex-fuel
+Driving after refuel,4,Urban stop-go; Highway; Idle-heavy; Short trip (<T_{mathrm{stab}})
+Non-fuel fault state,4,None; Vacuum leak; Dirty MAF; Aged O_2 sensor
